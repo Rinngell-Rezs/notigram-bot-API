@@ -1,6 +1,7 @@
 #Library import
 from telegram.ext import ApplicationBuilder
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 #Config import
 try:
@@ -23,6 +24,14 @@ API = FastAPI(
     openapi_tags=tags_metadata,
     contact=contact_info,
     debug=True
+)
+
+API.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 #API Routes
