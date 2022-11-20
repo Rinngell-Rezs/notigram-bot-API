@@ -23,9 +23,8 @@ app = ApplicationBuilder().token(TOKEN).build()
 #Bot commands
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f"""Hello @{update.effective_user.username}! My name is Notigram, and I'll send you a  notification every time you ask me to 😋
-    
-    Press /token to get started!""")
+    await update.message.reply_text(f"""Hello @{update.effective_user.username}! My name is Notigram, and I'll send you a  notification every time you ask me to 😋 
+    \nPress /token to get started!""")
 
 async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
