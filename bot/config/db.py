@@ -1,4 +1,4 @@
-from pymongo import MongoClient, ServerApi
+from pymongo import MongoClient
 
 creds = {
     'DB':'',
@@ -8,4 +8,4 @@ creds = {
 
 creds['URI'] = f"mongodb+srv://notigram:{creds['PASSWORD']}@cluster0.dnee7co.mongodb.net/?retryWrites=true&w=majority"
 
-conn = MongoClient(creds['URI'], server_api=ServerApi('1'))
+conn = MongoClient(creds['URI'])
