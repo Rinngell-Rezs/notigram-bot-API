@@ -1,1 +1,2 @@
-TOKEN = "5950145264:AAE40k_Dm9cb7P4Qly9P2_oWJVCEodFFhus"
+from os import environ
+TOKEN = environ.get('bot_TOKEN')
