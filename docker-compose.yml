@@ -1,0 +1,11 @@
+version: "1.0.0"
+services:
+  notigram-api:
+    hostname: notigram-api
+    build: ./api
+    ports:
+      - "8000:8000"
+
+  notigram-bot:
+    hostname: notigram-bot
+    build: ./bot
