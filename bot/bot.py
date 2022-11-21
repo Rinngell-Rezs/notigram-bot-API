@@ -10,7 +10,7 @@ try:
 except ImportError:
     import os
     TOKEN = os.environ['TOKEN']
-from about.tags import tags_metadata, contact_info
+from about.tags import tags_metadata, contact_info, app_info
 from config.db import conn
 
 #Model import
@@ -28,7 +28,7 @@ stdmarkup = markup([
     ],
     [
         button("Revoke Token",callback_data=str(REVOKE)),
-        button("How to use",callback_data=str(ABOUT))
+        button("About",callback_data=str(ABOUT))
     ]
 ])
 
@@ -38,7 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     keyboard = [
         [button("Get Token", callback_data=str(GEN))],
-        [button("How to use",callback_data=str(ABOUT))]
+        [button("About",callback_data=str(ABOUT))]
         ]
     reply_markup = markup(keyboard)
 
@@ -110,7 +110,7 @@ async def hadouken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.answer()
 
     await query.edit_message_text(
-        text=f"Info about the bot here.",
+        text=app_info,
         parse_mode='HTML',
         reply_markup=stdmarkup)
     return HANDLER
