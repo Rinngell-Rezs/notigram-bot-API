@@ -35,8 +35,6 @@ stdmarkup = markup([
 #Bot commands
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    query = update.callback_query
-    await query.answer()
 
     keyboard = [
         [button("Get Token", callback_data=str(GEN))],
