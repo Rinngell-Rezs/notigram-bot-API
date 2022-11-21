@@ -11,7 +11,7 @@ from config.db import conn
 from models.request import messageRequest
 
 #Setup
-TOKEN = os.environ['TOKEN']
+TOKEN = os.environ['bot_TOKEN']
 bot = ApplicationBuilder().token(TOKEN).build()
 API = FastAPI(
     title="Notigram API",
