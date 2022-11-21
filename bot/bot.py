@@ -110,7 +110,7 @@ async def hadouken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.answer()
 
     await query.edit_message_text(
-        text=app_info,
+        text=app_info['info'],
         parse_mode='HTML',
         reply_markup=stdmarkup)
     return HANDLER
