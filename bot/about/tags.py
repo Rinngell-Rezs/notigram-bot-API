@@ -12,7 +12,7 @@ contact_info = {
 }
 
 app_info={
-    'info':"""Hello! My name is Notigram, and I am a token based API-bot.
+    'info':"""Hello! My name is Notigram, and I am a token based API-bot ^^
     \nWhat do I mean by this? Well, here I can provide you with a unique token, which you can use to communicate with my api through an http request, or through my python module.
     \nThe request is simple. you send your token along with a message, and I'll immediately send it to you through Telegram.
     \nThis way you can set the request up inside a script, or as a terminal command, and get notifications on your phone every time an event happens, such as the end of a program, a milestone, or any other alert you could need to be notified about.
