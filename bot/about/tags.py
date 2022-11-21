@@ -22,6 +22,6 @@ app_info={
     \n<code>python -m notigram &lt;TOKEN&gt; &lt;message&gt;</code>
     \nOr instantiate it inside a code with:
     \n<code>from notigram import ping\nping('&lt;TOKEN&gt','message')</code>
-    \n\nFor more info about usage, check the repository page on <a href="https://github.com/Rinngell-Rezs/notigram-CLI">Github</a>!
+    \n\nFor more info about usage, check the <a href="https://github.com/Rinngell-Rezs/notigram-CLI">repository page on Github</a>!
     """
 }
