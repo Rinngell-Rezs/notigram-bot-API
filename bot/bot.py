@@ -1,5 +1,5 @@
 #Library import
-from telegram import Update
+from telegram import Update, InlineKeyboardButton as button, InlineKeyboardMarkup as markup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import nest_asyncio
 from uuid import uuid4
@@ -23,8 +23,19 @@ app = ApplicationBuilder().token(TOKEN).build()
 #Bot commands
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f"""Hello @{update.effective_user.username}! My name is Notigram, and I'll send you a  notification every time you ask me to 😋 
-    \nPress /token to get started!""")
+    keyboard = [
+        [
+            button("Option 1", callback_data="1"),
+            button("Option 2", callback_data="2"),
+        ],
+        [button("Option 3", callback_data="3")],
+    ]
+
+    reply_markup = markup(keyboard)
+    await update.message.reply_text(
+        text = f"""Hello @{update.effective_user.username}! My name is Notigram, and I'll send you a  notification every time you ask me to 😋 
+        \nPress Get Token to get started!""",
+        reply_markup=1)
 
 async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
