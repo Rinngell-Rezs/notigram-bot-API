@@ -1,6 +1,6 @@
 #Library import
 from telegram import Update, InlineKeyboardButton as button, InlineKeyboardMarkup as markup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, ConversationHandler, CallbackQueryHandler
 import nest_asyncio
 from uuid import uuid4
 
@@ -20,28 +20,50 @@ from models.token import Token
 nest_asyncio.apply()
 app = ApplicationBuilder().token(TOKEN).build()
 
+HANDLER,GEN,NEW,REVOKE,ABOUT = range(5)
+stdmarkup = markup([
+    [
+        button("Token",callback_data=str(GEN)),
+        button("Generate New",callback_data=str(NEW))
+    ],
+    [
+        button("Revoke Token",callback_data=str(REVOKE)),
+        button("How to use",callback_data=str(ABOUT))
+    ]
+])
+
 #Bot commands
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    keyboard = [
-        [
-            button("Option 1", callback_data="1"),
-            button("Option 2", callback_data="2"),
-        ],
-        [button("Option 3", callback_data="3")],
-    ]
+    query = update.callback_query
+    await query.answer()
 
+    keyboard = [
+        [button("Get Token", callback_data=str(GEN))],
+        [button("How to use",callback_data=str(ABOUT))]
+        ]
     reply_markup = markup(keyboard)
+
     await update.message.reply_text(
         text = f"""Hello @{update.effective_user.username}! My name is Notigram, and I'll send you a  notification every time you ask me to 😋 
-        \nPress Get Token to get started!""",
+        \nPress <code>Get Token</code> to get started!""",
+        parse_mode='HTML',
         reply_markup=reply_markup)
+    return HANDLER
 
 async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+
     res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
+
     if(res_token != None):
-        await update.message.reply_text(f'Your token is: <code>{res_token["token"]}</code>',parse_mode='HTML')
-        return
+        await query.edit_message_text(
+            text=f'Your token is: <code>{res_token["token"]}</code>',
+            parse_mode='HTML',
+            reply_markup=stdmarkup 
+        )
+        return HANDLER
 
     new_token = dict(Token(
         user= str(update.effective_user.id),
@@ -49,10 +71,17 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     ));
 
     conn.cluster0.users.insert_one(new_token)
-    await update.message.reply_text(f'Great {update.effective_user.username}! your CLI token is: \n<code>{new_token["token"]}</code>',parse_mode="HTML")
-    return
+    await query.edit_message_text(
+        text=f'Great {update.effective_user.username}! your new CLI token is: \n<code>{new_token["token"]}</code>',
+        parse_mode="HTML",
+        reply_markup=stdmarkup
+    )
+    return HANDLER
 
 async def new_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query.answer()
+    await query.answer()
+
     res_token = conn.cluster0.users.find_one_and_delete({"user":str(update.effective_user.id)})
     new_token = dict(Token(
         user= str(update.effective_user.id),
@@ -60,19 +89,47 @@ async def new_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     ));
 
     conn.cluster0.users.insert_one(new_token)
-    await update.message.reply_text(f"Your new token is: \n<code>{new_token['token']}</code> \n\nDon't lose it again ^^'",parse_mode='HTML')
-    return
+    await query.edit_message_text(
+        text=f"Your new token is: \n<code>{new_token['token']}</code> \n\nDon't lose it again ^^'",
+        parse_mode='HTML',
+        reply_markup=stdmarkup
+    )
+    return HANDLER
 
 async def revoken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+
     conn.cluster0.users.find_one_and_delete({"user":str(update.effective_user.id)})
-    await update.message.reply_text(f"It's done! You don't have a token anymore. \nPress /token if you ever want a new token again!")
-    return
+    await query.edit_message_text(
+        text=f"It's done! You don't have a token anymore. \nPress <code>Token</code> or <code>Generate New</code> if you ever want a new token again!",
+        parse_mode='HTML',
+        reply_markup=stdmarkup)
+    return HANDLER
+
+async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+
+    await query.edit_message_text(
+        text=f"Info about the bot here.",
+        parse_mode='HTML',
+        reply_markup=stdmarkup)
+    return HANDLER
 
 #Bot handlers
-app.add_handler(CommandHandler("start",start))
-app.add_handler(CommandHandler("token", gen_token))
-app.add_handler(CommandHandler("new_token", new_token))
-app.add_handler(CommandHandler("revoke",revoken))
+conv_handler = ConversationHandler(
+        entry_points=[CommandHandler("start", start)],
+        states={
+            HANDLER: [
+                CallbackQueryHandler(gen_token, pattern="^" + str(GEN) + "$"),
+                CallbackQueryHandler(new_token, pattern="^" + str(NEW) + "$"),
+                CallbackQueryHandler(revoken, pattern="^" + str(REVOKE) + "$")
+            ]
+        },
+        fallbacks=[CommandHandler("start", start)],
+    )
+app.add_handler(conv_handler)
 
 #start
 app.run_polling()
