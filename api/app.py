@@ -1,14 +1,9 @@
 #Library import
 from telegram.ext import ApplicationBuilder
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 #Config import
-try:
-    from config.keychain import TOKEN
-except ImportError:
-    import os
-    TOKEN = os.environ['TOKEN']
+import os
 from about.tags import tags_metadata, contact_info
 from config.db import conn
 
@@ -16,6 +11,7 @@ from config.db import conn
 from models.request import messageRequest
 
 #Setup
+TOKEN = os.environ['TOKEN']
 bot = ApplicationBuilder().token(TOKEN).build()
 API = FastAPI(
     title="Notigram API",
@@ -26,20 +22,7 @@ API = FastAPI(
     debug=True
 )
 
-API.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 #API Routes
-@API.get('/')
-async def home():
-    await bot.bot.send_message(184075777,"Ya haz dos apps en vez de una, boluda xD",parse_mode='HTML');
-    return {'message':'Hello from the API'}
-
 @API.post('/sendMessage')
 async def sendMessage(req:messageRequest):
     user = conn.cluster0.users.find_one({'token':req.token});
