@@ -77,7 +77,7 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     return HANDLER
 
 async def new_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    query = update.callback_query.answer()
+    query = update.callback_query
     await query.answer()
 
     res_token = conn.cluster0.users.find_one_and_delete({"user":str(update.effective_user.id)})
@@ -105,7 +105,7 @@ async def revoken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=stdmarkup)
     return HANDLER
 
-async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def hadouken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
 
@@ -122,7 +122,8 @@ conv_handler = ConversationHandler(
             HANDLER: [
                 CallbackQueryHandler(gen_token, pattern="^" + str(GEN) + "$"),
                 CallbackQueryHandler(new_token, pattern="^" + str(NEW) + "$"),
-                CallbackQueryHandler(revoken, pattern="^" + str(REVOKE) + "$")
+                CallbackQueryHandler(revoken, pattern="^" + str(REVOKE) + "$"),
+                CallbackQueryHandler(hadouken, pattern="^" + str(ABOUT) + "$")
             ]
         },
         fallbacks=[CommandHandler("start", start)],
