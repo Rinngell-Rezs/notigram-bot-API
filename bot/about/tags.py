@@ -1,13 +1,13 @@
 tags_metadata = [
     {
         'name':'Notigram API',
-        'description':'Pruebas'
+        'description':'Prueba de métodos de la API'
     }
 ]
 
 contact_info = {
     'name':'Rinngell_Rezs',
-    'url':'https://github.com/Mickey-RS',
+    'url':'https://github.com/Rinngell-Rezs/',
     'email':'rinagel97@gmail.com'
 }
 
@@ -22,6 +22,6 @@ app_info={
     \n<code>python -m notigram &lt;TOKEN&gt; &lt;message&gt;</code>
     \nOr instantiate it inside a code with:
     \n<code>from notigram import ping\nping('&lt;TOKEN&gt','message')</code>
-    \n\nFor more info about usage, check the repository page on <a href="https://github.com/Mickey-RS/notigram-CLI">Github</a>!
+    \n\nFor more info about usage, check the repository page on <a href="https://github.com/Rinngell-Rezs/notigram-CLI">Github</a>!
     """
 }
