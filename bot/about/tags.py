@@ -8,7 +8,7 @@ tags_metadata = [
 contact_info = {
     'name':'Rinngell_Rezs',
     'url':'https://github.com/Rinngell-Rezs/',
-    'email':'rinagel97@gmail.com'
+    'email':'mrodriguezs0218@gmail.com'
 }
 
 app_info={
