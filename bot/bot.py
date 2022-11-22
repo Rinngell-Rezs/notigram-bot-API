@@ -54,7 +54,7 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.answer()
 
     res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
-    inst = '\nNow press <code>"About"</code> to get instructions in how to use your token!'
+    inst = '\n\nNow press <code>"About"</code> to get instructions in how to use your token!'
 
     if(res_token != None):
         await query.edit_message_text(
