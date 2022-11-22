@@ -54,10 +54,11 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.answer()
 
     res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
+    inst = '\nNow press <code>"About"</code> to get instructions in how to use your token!'
 
     if(res_token != None):
         await query.edit_message_text(
-            text=f'Your token is: <code>{res_token["token"]}</code>',
+            text=f'Your token is: <code>{res_token["token"]}</code>'+inst,
             parse_mode='HTML',
             reply_markup=stdmarkup 
         )
@@ -70,7 +71,7 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     conn.cluster0.users.insert_one(new_token)
     await query.edit_message_text(
-        text=f'Great {update.effective_user.username}! your new CLI token is: \n<code>{new_token["token"]}</code>',
+        text=f'Great {update.effective_user.username}! your new CLI token is: \n<code>{new_token["token"]}</code>'+inst,
         parse_mode="HTML",
         reply_markup=stdmarkup
     )
