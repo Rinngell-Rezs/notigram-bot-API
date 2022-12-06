@@ -30,3 +30,7 @@ async def sendMessage(req:messageRequest):
         return {'error':'Invalid token.'}
     await bot.bot.send_message(user['user'],req.message,parse_mode='HTML')
     return {'response':'Success.'}
+
+@API.get('/sendMessage')
+async def sendMessage():
+    return {'response':'Invalid request. Try sending a POST request next time.'}
