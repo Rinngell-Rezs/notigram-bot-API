@@ -33,4 +33,8 @@ async def sendMessage(req:messageRequest):
 
 @API.get('/sendMessage')
 async def sendMessage():
-    return {'response':'Invalid request. Try sending a POST request next time.'}
+    return {'response':'Nice try,but try sending a POST request next time.'}
+
+@API.get('/')
+async def sendMessage():
+    return {'response':'There\'s nothing in here. Try at /sendMessage .'}
