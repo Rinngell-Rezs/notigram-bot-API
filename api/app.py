@@ -36,5 +36,5 @@ async def sendMessage():
     return {'response':'Nice try,but try sending a POST request next time.'}
 
 @API.get('/')
-async def sendMessage():
+async def home():
     return {'response':'There\'s nothing in here. Try at /sendMessage .'}
