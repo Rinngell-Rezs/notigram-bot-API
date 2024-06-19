@@ -37,4 +37,4 @@ async def sendMessage():
 
 @API.get('/')
 async def home():
-    return {'response':'There\'s nothing in here. Try at /sendMessage .'}
+    return {'response':'There\'s nothing in here. Try POSTing at /sendMessage .'}
