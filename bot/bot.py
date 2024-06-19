@@ -10,11 +10,12 @@ try:
 except ImportError:
     import os
     TOKEN = os.environ['TOKEN']
-from about.tags import tags_metadata, contact_info, app_info
+from about.tags import app_info
 from config.db import conn
 
 #Model import
 from models.token import Token
+
 
 #Setup
 nest_asyncio.apply()
@@ -23,12 +24,12 @@ app = ApplicationBuilder().token(TOKEN).build()
 HANDLER,GEN,NEW,REVOKE,ABOUT = range(5)
 stdmarkup = markup([
     [
-        button("Token",callback_data=str(GEN)),
-        button("Generate New",callback_data=str(NEW))
+        button("Token", callback_data=str(GEN)),
+        button("Generate New", callback_data=str(NEW))
     ],
     [
-        button("Revoke Token",callback_data=str(REVOKE)),
-        button("About",callback_data=str(ABOUT))
+        button("Revoke Token", callback_data=str(REVOKE)),
+        button("About", callback_data=str(ABOUT))
     ]
 ])
 
@@ -38,7 +39,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     keyboard = [
         [button("Get Token", callback_data=str(GEN))],
-        [button("About",callback_data=str(ABOUT))]
+        [button("About", callback_data=str(ABOUT))]
         ]
     reply_markup = markup(keyboard)
 
@@ -53,12 +54,12 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
 
-    res_token = conn.cluster0.users.find_one({"user":str(update.effective_user.id)})
+    res_token = conn.cluster0.users.find_one({"user": str(update.effective_user.id)})
     inst = '\n\nNow press <code>"About"</code> to get instructions in how to use your token!'
 
     if(res_token != None):
         await query.edit_message_text(
-            text=f'Your token is: <code>{res_token["token"]}</code>'+inst,
+            text=f'Your token is: <code>{res_token["token"]}</code>' + inst,
             parse_mode='HTML',
             reply_markup=stdmarkup 
         )
@@ -71,7 +72,7 @@ async def gen_token(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     conn.cluster0.users.insert_one(new_token)
     await query.edit_message_text(
-        text=f'Great {update.effective_user.username}! your new CLI token is: \n<code>{new_token["token"]}</code>'+inst,
+        text=f'Great {update.effective_user.username}! your new CLI token is: \n<code>{new_token["token"]}</code>' + inst,
         parse_mode="HTML",
         reply_markup=stdmarkup
     )
@@ -99,7 +100,7 @@ async def revoken(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
 
-    conn.cluster0.users.find_one_and_delete({"user":str(update.effective_user.id)})
+    conn.cluster0.users.find_one_and_delete({"user": str(update.effective_user.id)})
     await query.edit_message_text(
         text=f"It's done! You don't have a token anymore. \nPress <code>Token</code> or <code>Generate New</code> if you ever want a new token again!",
         parse_mode='HTML',
@@ -121,10 +122,10 @@ conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
             HANDLER: [
-                CallbackQueryHandler(gen_token, pattern="^" + str(GEN) + "$"),
-                CallbackQueryHandler(new_token, pattern="^" + str(NEW) + "$"),
-                CallbackQueryHandler(revoken, pattern="^" + str(REVOKE) + "$"),
-                CallbackQueryHandler(hadouken, pattern="^" + str(ABOUT) + "$")
+                CallbackQueryHandler(gen_token, pattern="^" + str(GEN)      + "$"),
+                CallbackQueryHandler(new_token, pattern="^" + str(NEW)      + "$"),
+                CallbackQueryHandler(revoken,   pattern="^" + str(REVOKE)   + "$"),
+                CallbackQueryHandler(hadouken,  pattern="^" + str(ABOUT)    + "$")
             ]
         },
         fallbacks=[CommandHandler("start", start)],
